@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"strings"
-	"strconv"
+	// "strings"
+	// "strconv"
 	"sync"
 	"time"
 	"github.com/andelf/go-curl"
@@ -217,50 +217,6 @@ func (dl *DL_DATA) showProgress(downloaded int64) {
         percent, b_now, unit[ind_now], b_total, unit[ind_total])
 }
 
-// take size of file
-func getSizeUrl(url string) (int64, error) {
-	var size int64
-	// init curl
-	easy := curl.EasyInit()
-	if easy == nil {
-		return 0, fmt.Errorf("can't init curl")
-		
-	}
-
-	defer easy.Cleanup()
-
-	easy.Setopt(curl.OPT_URL, url) // url set
-	easy.Setopt(curl.OPT_NOBODY, true) // without body information
-	easy.Setopt(curl.OPT_FOLLOWLOCATION, true) // can follow source of link for real get data
-	easy.Setopt(curl.OPT_WRITEFUNCTION, func(content []byte, userdata interface{}) bool { // discard the actual response body
-		return true
-	})
-
-	easy.Setopt(curl.OPT_HEADERFUNCTION, func(data []byte, userdata interface{}) bool { // only take content-lenght value
-		header := strings.TrimSpace(string(data))
-		if strings.HasPrefix(strings.ToLower(header), "content-length:") {
-			parts := strings.SplitN(header, ":", 2)
-			if len(parts) == 2 {
-				sizeStr := strings.TrimSpace(parts[1])
-				if val, err := strconv.ParseInt(sizeStr, 10, 64); err == nil {
-					if ptr, ok := userdata.(*int64); ok {
-						*ptr = val
-					}
-				}
-			}
-		}
-		return true
-	})
-
-	easy.Setopt(curl.OPT_WRITEHEADER, &size)
-
-	err_easy := easy.Perform()
-	if err_easy != nil {
-		return 0, err_easy
-	}
-
-	return size, nil
-}
 
 // func single_dl(dl *DL_DATA) error {
 // 	// init a file
@@ -336,7 +292,9 @@ func main() {
 		return
 	}
 
-	load_cfg(&dl.cfg)
+	if load_cfg(&dl.cfg) == 0 {
+		return
+	}
 
 	// hide cursor
 	fmt.Printf("%s", HIDE_CURSOR)

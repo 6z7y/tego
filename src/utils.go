@@ -1,7 +1,11 @@
 package main
 
 import (
+	"fmt"
+	"strconv"
 	"strings"
+
+	"github.com/andelf/go-curl"
 )
 
 
@@ -64,4 +68,12 @@ func getSizeUrl(url string) (int64, error) {
 	}
 
 	return size, nil
+}
+
+// limit per-thread
+func checkPerThread(num int) int {
+	if num < 1 || num > 32 {
+		return 1
+	}
+	return 0
 }

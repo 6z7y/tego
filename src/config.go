@@ -9,14 +9,14 @@ import (
 )
 
 // config content
+// todo: add static path option
 const default_cfg_content = `#tego config
 
-# number of parallel threads (4=default)
+# number of parallel threads (4 = default, range 1..32)
 per_thread = 4
 
-later...`
+#later...`
 
-// todo: add static path option
 
 func getConfigPath() (string, string) {
 	home := os.Getenv("HOME") // ~
@@ -35,7 +35,7 @@ func new_cfg(path_parent string, path_file string) {
 
 }
 
-func load_cfg(dl_cfg *DL_CFG) {
+func load_cfg(dl_cfg *DL_CFG) int {
 	path_parent, path_file := getConfigPath()
 
 	_, err := os.Stat(path_file) // check from metadata file
@@ -58,17 +58,23 @@ func load_cfg(dl_cfg *DL_CFG) {
 			if strings.TrimSpace(parts[0]) == "per_thread" {
 				val, err := strconv.Atoi(strings.TrimSpace(parts[1]))
 				if err != nil {
-					fmt.Printf("a probloem in config, line per_thread")
+					fmt.Printf("a probloem in config, line per_thread\n")
 					dl_cfg.per_thread = 4
 				} else {
 					dl_cfg.per_thread = val
+					if checkPerThread(dl_cfg.per_thread) == 1 {
+						fmt.Fprintln(os.Stderr, "thread limit exceeded, only (1..32)")
+						return 0
+					}
 				}
 
 			}
+
 			// later ...
 		}
 	}
 
 	f.Close()
 	fmt.Printf("per_thread: %d\n", dl_cfg.per_thread)
+	return 1
 }
