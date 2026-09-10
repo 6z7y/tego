@@ -21,7 +21,6 @@ type Chunk struct {
 	end			int64
 	downloaded	int64
 	status		string
-	// file		*os.File
 	err			error
 }
 
@@ -33,37 +32,9 @@ type DL_DATA struct {
 	size	    int64
 	cfg			DL_CFG
 	offset		int64
-	// chunk  []*Chunk
 }
 
 var unit = [6]string{"B", "KB", "MB", "GB", "TB", "PB"}
-
-// func progress_fn(dltotal, dlnow, ultotal, ulnow float64, userdata interface{}) bool {
-// 	if dltotal > 0 {
-// 		percent := (dlnow / dltotal) * 100
-//
-// 		ind_now := 0
-// 		ind_total := 0
-//
-// 		b_now := dlnow
-// 		b_total := dltotal
-//
-// 		for b_now >= 1024 && ind_now < 5 {
-// 			b_now /= 1024
-// 			ind_now++;
-// 		}
-//
-// 		for b_total >= 1024 && ind_total < 5 {
-// 			b_total /= 1024
-// 			ind_total++;
-// 		}
-//
-// 		fmt.Printf("\r[%.2f%%] %.2f %s / %.2f %s         ", percent, b_now, unit[ind_now], b_total, unit[ind_total])
-//
-// 	}
-// 	return true
-// }
-
 
 func (dl *DL_DATA) threaded_dl() error {
     // 1. Create and prepare file
@@ -242,11 +213,9 @@ func (dl *DL_DATA) showProgress(downloaded int64) {
         ind_total++
     }
     
-    fmt.Printf("\r[%.2f%%] %.2f %s / %.2f %s", 
+    fmt.Printf("\r[%.2f%%] %.2f %s / %.2f %s    ", 
         percent, b_now, unit[ind_now], b_total, unit[ind_total])
 }
-
-
 
 // take size of file
 func getSizeUrl(url string) (int64, error) {
