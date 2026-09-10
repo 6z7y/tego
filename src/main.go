@@ -283,20 +283,25 @@ func main() {
 	}
 
 	// 2. init context
-	dl := DL_DATA{ url: os.Args[1] }
+	dl := DL_DATA{}
 
-	arg_handle(&os.Args, &dl)
+	if !arg_handle(&os.Args, &dl) {
+		return
+	}
 
 	// default settings
 	if dl.per_thread == 0 {
 		dl.per_thread = 4
 	}
+	dl.url = os.Args[1]
 
 	// 3. extract name from url
-	dl.name = extract_name(dl.url)
-	if dl.name == "ERR" {
-		fmt.Errorf("can't extract name!")
-		return
+	if dl.name == "" {
+		dl.name = extract_name(dl.url)
+		if dl.name == "ERR" {
+			fmt.Errorf("can't extract name!")
+			return
+		}
 	}
 
 	// if load_cfg(&dl.cfg) == 0 {

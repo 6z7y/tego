@@ -28,22 +28,33 @@ func arg_handle(args *[]string, dl *DL_DATA) bool {
 		switch (*args)[i] {
 		case "-t":
 			if i+1 >= len(*args) {
-				fmt.Fprintln(os.Stderr, "-t required a num between range (1..32)")
+				fmt.Fprintln(os.Stderr, "-t requires a number (1..32)")
 				return false
 			}
-			n, err := strconv.Atoi((*args)[i+1])
-			if err != nil || n < 1 || n > 32 {
-				fmt.Fprintln(os.Stderr, "invalid thread count  (1..32")
+
+			num, err := strconv.Atoi((*args)[i+1])
+			if err != nil || num < 1 || num > 32 {
+				fmt.Fprintln(os.Stderr, "thread count must be 1..32")
 				return false
 			}
-			(*dl).per_thread = n
+			(*dl).per_thread = num
 			*args = append((*args)[:i], (*args)[i+2:]...)
+
+		case "-o":
+			if i+1 >= len(*args) {
+				fmt.Fprintln(os.Stderr, "-o requires a filename")
+				return false
+			}
+
+			(*dl).name = (*args)[i+1]
+			*args = append((*args)[:i], (*args)[i+2:]...)
+
 		case "-v":
 			fmt.Printf("%s: %s\n", NAME_PROG, VER_PROG)
-			return true
+			os.Exit(0)
 		case "-h":
 			fmt.Println(HELP_MSG)
-			return true
+			os.Exit(0)
 		default:
 			i++
 		}
