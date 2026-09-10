@@ -14,7 +14,7 @@ Usage:
 
 Options:
     -t <num>    number of parallel threads (1..32, default 4)
-	-o <file>	output filename (default: from url)
+    -o <file>   output filename (default: from url)
     -v          show version
     -h          show this help
 
