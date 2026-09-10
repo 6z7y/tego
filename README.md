@@ -48,4 +48,4 @@ sudo make install
 tego <URL>
 ```
 
-# please read -h for understand used
+*please read -h for understand used*
