@@ -14,8 +14,14 @@ Usage:
 
 Options:
     -t <num>    number of parallel threads (1..32, default 4)
+	-o <file>	output filename (default: from url)
     -v          show version
     -h          show this help
+
+Examples:
+    tego https://6z7y.dpdns.org/randoms/tego_test.txt
+    tego https://6z7y.dpdns.org/randoms/tego_test.txt -t 8
+    tego https://6z7y.dpdns.org/randoms/tego_test.txt -t 8 -o myfile.txt
 `
 
 func arg_handle(args *[]string, dl *DL_DATA) bool {

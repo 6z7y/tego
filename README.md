@@ -48,11 +48,4 @@ sudo make install
 tego <URL>
 ```
 
-## tego config (~/.config/tego/tego.conf)
-
-```ini
-# number of parallel threads (4 = default, range 1..32)
-per_thread = 4
-
-# later...
-```
+# please read -h for understand used
