@@ -10,10 +10,10 @@ import (
 	"github.com/andelf/go-curl"
 	"github.com/edsrzf/mmap-go"
 )
-type DL_CFG struct {
-	per_thread  int
-	// ststic path output
-}
+// type DL_CFG struct {
+// 	per_thread  int
+// 	// ststic path output
+// }
 
 type Chunk struct {
 	index		int
@@ -28,9 +28,9 @@ type DL_DATA struct {
 	url			string
 	name		string
 	file		*os.File
+	per_thread  int
 	mmap		mmap.MMap
 	size	    int64
-	cfg			DL_CFG
 	offset		int64
 }
 
@@ -81,7 +81,7 @@ func (dl *DL_DATA) threaded_dl() error {
 
     // 5. Download chunks in parallel
     var wg sync.WaitGroup
-    sem := make(chan bool, dl.cfg.per_thread) // Limit concurrent downloads
+    sem := make(chan bool, dl.per_thread) // Limit concurrent downloads
     
     // Progress tracking
     var mu sync.Mutex
@@ -285,6 +285,13 @@ func main() {
 	// 2. init context
 	dl := DL_DATA{ url: os.Args[1] }
 
+	arg_handle(&os.Args, &dl)
+
+	// default settings
+	if dl.per_thread == 0 {
+		dl.per_thread = 4
+	}
+
 	// 3. extract name from url
 	dl.name = extract_name(dl.url)
 	if dl.name == "ERR" {
@@ -292,9 +299,9 @@ func main() {
 		return
 	}
 
-	if load_cfg(&dl.cfg) == 0 {
-		return
-	}
+	// if load_cfg(&dl.cfg) == 0 {
+	// 	return
+	// }
 
 	// hide cursor
 	fmt.Printf("%s", HIDE_CURSOR)
@@ -309,7 +316,7 @@ func main() {
 	dl.size = size
 
     fmt.Printf("Downloading: %s (%.2f MB)\n", dl.name, float64(dl.size)/(1024*1024))
-    fmt.Printf("Using %d threads\n", dl.cfg.per_thread)
+    fmt.Printf("Using %d threads\n", dl.per_thread)
 
     // Start threaded download
     err = dl.threaded_dl()

@@ -11,6 +11,7 @@ import (
 
 const (
 	NAME_PROG = "tego"
+	VER_PROG = "1.0.0"
     HIDE_CURSOR = "\033[?25l"
     SHOW_CURSOR = "\033[?25h"
     // CLEAR_LINE  = "\r\033[K"
