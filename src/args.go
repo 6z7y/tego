@@ -19,9 +19,9 @@ Options:
     -h          show this help
 
 Examples:
-    tego https://6z7y.dpdns.org/randoms/tego_test.txt
-    tego https://6z7y.dpdns.org/randoms/tego_test.txt -t 8
-    tego https://6z7y.dpdns.org/randoms/tego_test.txt -t 8 -o myfile.txt
+    tego https://6z7y.github.io/tego/test.txt
+    tego https://6z7y.github.io/tego/test.txt -t 8
+    tego https://6z7y.github.io/tego/test.txt -t 8 -o myfile.txt
 `
 
 func arg_handle(args *[]string, dl *DL_DATA) bool {
